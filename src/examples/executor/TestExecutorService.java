@@ -9,15 +9,16 @@ import java.util.concurrent.ScheduledExecutorService;
 public class TestExecutorService {
 
   public static void watchNetflix() {
-
     System.out.println("Starting netflix from thread: " + Thread.currentThread().getName());
     ExecutorService netflix = Executors.newSingleThreadExecutor();
     netflix.execute(new WatchGOT());
     netflix.execute(new WatchLOTR());
-//    netflix.shutdownNow();
-    System.out.println("Shutdown netflix from thread: " + Thread.currentThread().getName());
 
-    netflix.shutdown();
+    netflix.shutdownNow();
+
+//    System.out.println("Shutdown netflix from thread: " + Thread.currentThread().getName());
+//    netflix.shutdown();
+
 //     try to watch LOTR again and see what happens
     System.out.println("Try to watch LOTR from thread: " + Thread.currentThread().getName());
     netflix.execute(new WatchLOTR());
@@ -38,7 +39,6 @@ public class TestExecutorService {
     executor1.execute(emailSenderMaria);
 
 
-
     for (String girl : List.of("ana", "maria", "ioana", "valentina")) {
       EmailSender emailSender = new EmailSender(girl);
       // executor1, pune în lista de chestii de rulat si emailSender
@@ -56,7 +56,7 @@ public class TestExecutorService {
     }
 //    executor1.shutdownNow();
 //    executor1.shutdown();
-
+//
 //    ExecutorService executor2 = Executors.newFixedThreadPool(2);
 //
 //    for (String boy : List.of("ion", "gheorghe", "sorin", "andrei"))
@@ -78,8 +78,10 @@ public class TestExecutorService {
 
     ExecutorService executorService = Executors.newCachedThreadPool();
 
-    for (int i = 0; i <= Integer.MAX_VALUE; i++)
-      executorService.execute(new EmailSender(recipients.get(Math.abs(new Random().nextInt() % 3))));
+    for (int i = 0; i <= Integer.MAX_VALUE; i++) {
+      EmailSender emailSenderTask = new EmailSender(recipients.get(Math.abs(new Random().nextInt() % 3)));
+      executorService.execute(emailSenderTask);
+    }
 
     executorService.shutdown();
   }

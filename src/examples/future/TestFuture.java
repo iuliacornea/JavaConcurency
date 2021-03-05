@@ -1,5 +1,8 @@
 package examples.future;
 
+import examples.executor.WatchGOT;
+
+import javax.xml.transform.sax.SAXSource;
 import java.util.concurrent.*;
 
 public class TestFuture {
@@ -7,21 +10,19 @@ public class TestFuture {
   public static void testSchedule() {
 //    ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(2);
     ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    Future<Boolean> cpdHomework = scheduledExecutorService.schedule(new Homework("CPD"), 2, TimeUnit.SECONDS);
-    Future<Boolean> notCpoHomework = scheduledExecutorService.schedule(new Homework("not CPD"), 5, TimeUnit.SECONDS);
+    Future<Boolean> cpdHomework = scheduledExecutorService.schedule(new Homework("CPD"), 5, TimeUnit.SECONDS);
+    Future<Boolean> notCpoHomework = scheduledExecutorService.schedule(new Homework("not CPD"), 0, TimeUnit.SECONDS);
 
 
     scheduledExecutorService.shutdown();
 
-    while (!cpdHomework.isDone()) {
-      try {
-        Thread.sleep(500);
-        notCpoHomework.cancel(true);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-      System.out.print(".");
+    try {
+      Thread.sleep(800);
+      notCpoHomework.cancel(true);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
+    System.out.print(".");
 
     if (cpdHomework.isDone() && !cpdHomework.isCancelled()) {
       try {
@@ -41,15 +42,32 @@ public class TestFuture {
     scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
                                                    @Override
                                                    public void run() {
+                                                     System.out.println(Thread.currentThread().getName() + ": " + "Start");
                                                      try {
-                                                       System.out.println(Thread.currentThread().getName() + ": " + "Start");
-                                                       Thread.sleep(20000);
-                                                       System.out.println("Brush Brush Brushing my teeth");
+                                                       Thread.sleep(2000);
                                                      } catch (InterruptedException e) {
                                                        e.printStackTrace();
                                                      }
+                                                     System.out.println("Brush Brush Brushing my teeth");
                                                    }
                                                  },
             1, 1, TimeUnit.SECONDS);
+
+//    scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+//                                                   @Override
+//                                                   public void run() {
+//                                                     System.out.println(Thread.currentThread().getName() + ": " + "Start");
+//                                                     System.out.println("Brush Brush Brushing my teeth");
+//                                                   }
+//                                                 },
+//            1, 4, TimeUnit.SECONDS);
+//
+//    scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+//                                                   @Override
+//                                                   public void run() {
+//                                                     System.out.println(Thread.currentThread().getName() + ": " + "Take bath");
+//                                                   }
+//                                                 },
+//            0, 1, TimeUnit.SECONDS);
   }
 }

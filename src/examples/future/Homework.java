@@ -12,7 +12,7 @@ public class Homework implements Callable {
   }
 
   @Override
-  public Object call() throws Exception {
+  public Boolean call() throws Exception {
     System.out.println("Starting to do homework for " + subject);
     Thread.sleep(2000);
     Boolean success = new Random().nextBoolean();
